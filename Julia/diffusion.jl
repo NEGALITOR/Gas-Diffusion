@@ -1,3 +1,5 @@
+#!/usr2/local/julia-1.8.2/bin/julia
+
 print("Enter Cube Count on One Dimension: ")
 
 maxSize = parse(Int64, readline())
@@ -73,7 +75,7 @@ while true
   print(" ", cube[maxSize, 1, 1])
   print(" ", cube[maxSize, maxSize, 1])
   print(" ", cube[maxSize, maxSize, maxSize])
-  println(sumVal)
+  println(" ", sumVal)
   
   rat < 0.99 || break
 end

@@ -1,0 +1,99 @@
+V "GNAT Lib v4.8"
+M P W=b
+P ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_IMPLICIT_LOOPS
+RV SPARK
+
+U diffusion%b		diffusion.adb		6ea95fd6 NE OO SU IL
+W ada%s			ada.ads			ada.ali
+W ada.float_text_io%s	a-flteio.ads		a-flteio.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W system.concat_2%s	s-conca2.adb		s-conca2.ali
+W system.concat_3%s	s-conca3.adb		s-conca3.ali
+W system.img_real%s	s-imgrea.adb		s-imgrea.ali
+
+D ada.ads		20121213103024 3ffc8e18
+D a-except.ads		20121213103024 10fcae55
+D a-finali.ads		20121213103024 52ecdc1b
+D a-flteio.ads		20121213103024 e18a47a0
+D a-inteio.ads		20121213103029 f64b89a4
+D a-ioexce.ads		20121213103029 8b9de6cd
+D a-stream.ads		20121213103024 2ca4ee37
+D a-tags.ads		20121213103024 6c0509d0
+D a-textio.ads		20130106093217 386df5d4
+D a-tiflio.ads		20121213103024 56fbda09
+D a-tiinio.ads		20121213103024 aa04e5d6
+D a-unccon.ads		20121213103024 f9eb8f06
+D diffusion.adb		20221111022920 41056406
+D interfac.ads		20121213103024 129923ea
+D i-cstrea.ads		20130106093208 3286f6aa
+D system.ads		20121213103024 90249111
+D s-conca2.ads		20121213103024 fbd0f2fc
+D s-conca3.ads		20121213103029 762a026a
+D s-crtl.ads		20130106093200 1ea48bce
+D s-exctab.ads		20121213103029 66e51330
+D s-ficobl.ads		20121213103029 55a71d43
+D s-finmas.ads		20121213103024 b95bb341
+D s-finroo.ads		20121213103024 4ff27390
+D s-imgrea.ads		20121213103024 c7a851e2
+D s-parame.ads		20121213103024 b6e20cc0
+D s-pooglo.ads		20121213103024 542f33d0
+D s-soflin.ads		20121213103024 24c8153c
+D s-stache.ads		20121213103024 596fc1b4
+D s-stalib.ads		20130106093355 f78bcf95
+D s-stoele.ads		20121213103024 facd7d98
+D s-stoele.adb		20121213103024 afc5dc80
+D s-stopoo.ads		20121213103024 7b8fbeee
+D s-traent.ads		20121213103024 5221ee41
+D s-unstyp.ads		20121213103024 6ae15c76
+D s-wchcon.ads		20121213103024 bfeb2e3d
+X 1 ada.ads
+16K9*Ada 19e8 13|1r6 1r19 1r40 2r5 2r18 2r39
+X 4 a-flteio.ads
+20K13*Float_Text_IO[10|45] 13|1w44 2r43
+X 5 a-inteio.ads
+18K13*Integer_Text_IO[11|45] 13|1w23 2r22
+X 9 a-textio.ads
+49K13*Text_IO 471e16 13|1w10 2r9
+242U14*Put 13|27s3 95s7 96s7 97s7 98s7 99s7
+263U14*Put_Line 13|100s7 106s5
+X 11 a-tiinio.ads
+55U14*Get 13|28s3[5|18]
+X 13 diffusion.adb
+4U11*diffusion 4b11 111l5 111t14
+5A8 Three_Dimensional_Float_Array(long_float)<integer><integer><integer>
+. 36r13
+7i3 maxSize{integer} 28m7 30r70 31r58 36r48 36r60 36r72 43r19 44r21 45r23
+. 46r25 47r27 48r29 77r19 78r21 79r23 97r39 98r39 98r48 99r39 99r48 99r57
+8f3 diffusion_coefficient{long_float} 33r12
+9f3 room_dimension{long_float} 30r16 31r30
+10f3 speed_of_gas_molecules{long_float} 30r33
+11f3 timestep{long_float} 30m3 33r36 71r22
+12f3 distance_between_blocks{long_float} 31m3 33r48 33r72
+14f3 DTerm{long_float} 33m3 57r68
+16f3 time{long_float} 71m7 71r15 95r28 106r56
+17f3 ratio{long_float} 91m7 102r17
+19f3 change{long_float} 57m24 58r57 59r57
+21f3 sumVal{long_float} 73m7 83m13 83r23 100r39
+22f3 minVal{long_float} 74m7 82m13 82r53 91r16
+23f3 maxVal{long_float} 75m7 81m13 81r53 91r25
+36a5 cube{5A8} 40m5 57r35 57r51 58m24 58r41 59m24 59r41 74r17 75r17 81r38
+. 82r38 83r32 96r34 97r34 98r34 99r34
+43i11 i{integer} 50r25 51r25 52r25 53r25 54r25 55r25 57r40 58r29 58r46
+44i13 j{integer} 50r37 51r37 52r37 53r37 54r39 55r39 57r43 58r32 58r49
+45i15 k{integer} 50r49 51r49 52r51 53r51 54r51 55r51 57r46 58r35 58r52
+46i17 l{integer} 50r29 51r29 52r29 53r29 54r29 55r29 57r56 59r29 59r46
+47i19 m{integer} 50r41 51r41 52r41 53r41 54r43 55r43 57r59 59r32 59r49
+48i21 n{integer} 50r53 51r53 52r55 53r55 54r55 55r55 57r62 59r35 59r52
+77i11 o{integer} 81r43 82r43 83r37
+78i13 p{integer} 81r46 82r46 83r40
+79i15 q{integer} 81r49 82r49 83r43
+
