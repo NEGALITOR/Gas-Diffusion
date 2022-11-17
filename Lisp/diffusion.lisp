@@ -1,5 +1,12 @@
 #!/usr/bin/sbcl --script
 
+(defvar partOn 0)
+(defvar partI)
+(princ "Partition On [y/n]? ")
+(terpri)
+(setf partI (read-char))
+(if (string-equal partI "y") (setf partOn 1))
+
 
 (defvar maxSize)
 (princ "Enter Cube Count on One Dimension: ")
@@ -20,6 +27,27 @@
 
 (defvar duration 0.0)
 (defvar rat 0.0)
+
+(defvar mid (- (ceiling (* maxSize 0.5)) 1))
+(defvar partH (+ (floor (* maxSize 0.75)) 1))
+
+(if (= partOn 1)
+  (progn
+    (loop for i from 1 to partH by 1 do
+      (loop for j from 0 to (- maxSize 1) by 1 do
+        (setf (aref cube mid (- maxSize i) j) -1)
+      )
+    )
+  )
+
+)
+
+(loop for i from 0 to (- maxSize 1) by 1 do
+  (loop for j from 0 to (- maxSize 1) by 1 do
+    (format t "~d | " (aref cube mid i j))
+  )
+)
+
 (defvar change 0.0)
 
 (defvar sumVal 0.0)
@@ -27,48 +55,61 @@
 (defvar minVal 0.0)
 
 (loop do
-  (loop for i from 0 to (- maxSize 1) by 1 do
-    (loop for j from 0 to (- maxSize 1) by 1 do
-      (loop for k from 0 to (- maxSize 1) by 1 do
-        (loop for l from 0 to (- maxSize 1) by 1 do
-          (loop for m from 0 to (- maxSize 1) by 1 do
-            (loop for n from 0 to (- maxSize 1) by 1 do
-              
-              (if (or (and (= i l) (and (= j m) (= k (+ n 1))  ) )
-                  (or (and (= i l) (and (= j m) (= k (- n 1))) ) )
-                  (or (and (= i l) (and (= j (+ m 1)) (= k n)) ) )
-                  (or (and (= i l) (and (= j (- m 1)) (= k n)) ) )
-                  (or (and (= i (+ l 1)) (and (= j m) (= k n)) ) )
-                  (or (and (= i (- l 1)) (and (= j m) (= k n)) ) ))
+  
+  (loop for i from 0 to (- maxSize 1) do
+    (loop for j from 0 to (- maxSize 1) do
+      (loop for k from 0 to (- maxSize 1) do
 
-                  (progn
-                      (setf change (* (- (aref cube i j k) (aref cube l m n)) DTerm))
-                      (setf (aref cube i j k) (- (aref cube i j k) change))
-                      (setf (aref cube l m n) (+ (aref cube l m n) change))
+        (if (/= (aref cube i j k) -1)
+        
+          (loop for l from 0 to (- maxSize 1) do
+            (loop for m from 0 to (- maxSize 1) do
+              (loop for n from 0 to (- maxSize 1) do
+                
+                (if (/= (aref cube l m n) -1)
+                
+                  (if (or (or
+                      (or (and (= i l) (and (= j m) (= k (+ n 1))) )
+                          (and (= i l) (and (= j m) (= k (- n 1))) ))
+                      (or (and (= i l) (and (= j (+ m 1)) (= k n)) )
+                          (and (= i l) (and (= j (- m 1)) (= k n)) )))
+                      (or (and (= i (+ l 1)) (and (= j m) (= k n)) )
+                          (and (= i (- l 1)) (and (= j m) (= k n)) )))
+
+                      (progn
+                          (setf change (* (- (aref cube i j k) (aref cube l m n)) DTerm))
+                          (setf (aref cube i j k) (- (aref cube i j k) change))
+                          (setf (aref cube l m n) (+ (aref cube l m n) change))
+                      )
                   )
+                )
+                
               )
-              
+                
             )
-              
           )
         )
+        
       )
     )
   )
 
   (setf duration (+ duration timestep))
   
+  (setf sumVal 0)
   (setf maxVal (aref cube 0 0 0))
   (setf minVal (aref cube 0 0 0))
   
-  (loop for o from 0 to (- maxSize 1) by 1 do
-    (loop for p from 0 to (- maxSize 1) by 1 do
-      (loop for q from 0 to (- maxSize 1) by 1 do
-        ;;;(format t "Cube IJK : ~d | maxVal : ~d | Max : ~d" (aref cube i j k) maxVal (max (aref cube i j k) maxVal))
-        ;;;(terpri)
-        (setf maxVal (max (aref cube o p q) maxVal))
-        (setf minVal (min (aref cube o p q) minVal))
-        (setf sumVal (+ sumVal (aref cube o p q)))
+  (loop for i from 0 to (- maxSize 1) do
+    (loop for j from 0 to (- maxSize 1) do
+      (loop for k from 0 to (- maxSize 1) do
+        (if (/= (aref cube i j k) -1)
+          (progn
+            (setf maxVal (max (aref cube i j k) maxVal))
+            (setf minVal (min (aref cube i j k) minVal))
+            (setf sumVal (+ sumVal (aref cube i j k)))
+          )
+        )
       )
     )
   )
@@ -77,10 +118,10 @@
   
   (format t "Time: ~d ~d ~d ~d ~d ~d" duration (aref cube 0 0 0) (aref cube (- maxSize 1) 0 0) (aref cube (- maxSize 1) (- maxSize 1) 0) (aref cube (- maxSize 1) (- maxSize 1) (- maxSize 1)) sumVal)
   (terpri)
-  ;;;(format t "Time : ~d | Ratio : ~d | MinVal / MaxVal : ~d / ~d" duration rat minVal maxVal)
 
-while (< rat 0.99)
+  (if (>= rat 0.99) (return))
 )
 
+(terpri)
 (format t "Box equilibrated in ~d seconds of simulated time." duration)
 

@@ -1,11 +1,17 @@
 PROGRAM diffusion
   
-  INTEGER :: maxSize, pass, once
+  INTEGER :: maxSize, once, partH, partOn, mid
+  CHARACTER :: partI
   REAL (kind=8), dimension(:,:,:), allocatable :: cube
   REAL (kind=8) :: diffusion_coefficient, room_dimension, speed_of_gas_molecules, timestep, distance_between_blocks, DTerm, &
                    time, ratio, change, sumValue, maxValue, minValue
   
   
+  partOn = 0
+  write(*, '(A)', advance="no") "Partition On [y/n]? "
+  read(*,*) partI
+  if(partI == 'y') partOn = 1
+
   write(*, '(A)', advance="no") "Enter Cube Count on One Dimension: "
   read(*,*) maxSize
   
@@ -27,20 +33,35 @@ PROGRAM diffusion
   
   cube(1,1,1) = 1.0E21
   
-  pass = 0
   time = 0.0
   ratio = 0.0
-  
-  once = 0
-  
-  do while ((once == 0) .OR. ratio < 0.99)
-    once = 1
+
+  mid = CEILING(maxSize*0.5)
+  partH = FLOOR(maxSize*0.75)
+
+  if (partOn == 1) then
+    do i = 0, partH
+      do j = 1, maxSize
+        
+        cube(mid, maxSize - i, j) = -1
+
+      END do
+    END do
+  END if
+
+  do while (0 == 0)
+
     do i = 1, maxSize
       do j = 1, maxSize
         do k = 1, maxSize
+
+          if (cube(i, j, k) == -1) cycle
+
           do l = 1, maxSize
             do m = 1, maxSize
               do n = 1, maxSize
+
+                if (cube(l, m, n) == -1) cycle
                 
                 if (( ( i == l )   .AND. ( j == m )   .AND. ( k == n+1) ) .OR. &
                     ( ( i == l )   .AND. ( j == m )   .AND. ( k == n-1) ) .OR. &
@@ -70,6 +91,8 @@ PROGRAM diffusion
     do i = 1, maxSize
       do j = 1, maxSize
         do k = 1, maxSize
+
+          if (cube(i, j, k) == -1) cycle
           maxValue = MAX(cube(i, j, k), maxValue)
           minValue = MIN(cube(i, j, k), minValue)
           sumValue = sumValue + cube(i, j, k)
@@ -80,15 +103,17 @@ PROGRAM diffusion
     
     ratio = minValue / maxValue
     
-    write(*, '(A, F0.5, A, F0.5)', advance="no") "Time : ", time, " ",  cube(1, 1, 1)
-    write(*, '(A, F0.5)', advance="no") " ", cube(maxSize, 1, 1)
-    write(*, '(A, F0.5)', advance="no") " ", cube(maxSize, maxSize, 1)
-    write(*, '(A, F0.5)', advance="no") " ", cube(maxSize, maxSize, maxSize)
-    write(*, '(F5.1)') sumValue
+    write(*, '(A, F0.3, A, E10.4)', advance="no") "Time : ", time, " ",  cube(1, 1, 1)
+    write(*, '(A, E10.4)', advance="no") " ", cube(maxSize, 1, 1)
+    write(*, '(A, E10.4)', advance="no") " ", cube(maxSize, maxSize, 1)
+    write(*, '(A, E10.4)', advance="no") " ", cube(maxSize, maxSize, maxSize)
+    write(*, '(A, E10.4)') " ", sumValue
     
+    if (ratio > 0.99) exit;
+
   END do
   
-  write(*, '(A, F5.1, A)') "Box equilibrated in ", time, " seconds of simulated time."
+  write(*, '(A, F0.3, A)') "Box equilibrated in ", time, " seconds of simulated time."
   
   if ( allocated(cube) ) deallocate(cube)
   

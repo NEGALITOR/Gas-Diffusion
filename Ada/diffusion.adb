@@ -4,7 +4,13 @@ use ada.text_io, ada.integer_text_io, ada.float_text_io;
 procedure diffusion is
   type Three_Dimensional_Float_Array is array (Integer range <>, Integer range <>, Integer range <>) of Long_Float;
   
+  partI : Character := ' ';
   maxSize : Integer := 1;
+
+  partOn : Boolean := False;
+  mid : Integer := 0;
+  partH : Integer := 0;
+  
   diffusion_coefficient : Long_Float := 0.175;
   room_dimension : Long_Float := 5.0;
   speed_of_gas_molecules : Long_Float := 250.0;
@@ -24,6 +30,10 @@ procedure diffusion is
   
 begin
   
+  put("Partition On [y/n]? ");
+  get(partI);
+  if partI = 'y' then partOn := True; end if;
+
   put("Enter Cube Count on One Dimension: ");
   get(maxSize);
   
@@ -38,15 +48,33 @@ begin
   begin
     
     cube(1, 1, 1) := Long_Float(10#1#e+21);
-      
+
+    mid := Integer(Float'Ceiling(Float(maxSize*0.5)));
+    partH := Integer(Float'Floor(Float(maxSize*0.75)));
+    if partOn = True then
+      for i in 0..partH loop
+        for j in 1..maxSize loop
+
+          cube(mid, maxSize - i, j) := -1.0;
+
+        end loop;
+      end loop;
+    end if;
+    
+    
     loop
       for i in 1..maxSize loop
         for j in 1..maxSize loop
           for k in 1..maxSize loop
+
+            if cube(i, j, k) = -1.0 then goto ContinueO; end if;
+
             for l in 1..maxSize loop
               for m in 1..maxSize loop
                 for n in 1..maxSize loop
-                
+
+                  if cube(l, m, n) = -1.0 then goto ContinueTW; end if;
+
                   if ( (i = l) and (j = m) and (k = n+1) ) or
                      ( (i = l) and (j = m) and (k = n-1) ) or
                      ( (i = l) and (j = m+1) and (k = n) ) or
@@ -60,10 +88,13 @@ begin
                        --put_line(Long_Float'Image(change));
                        
                   end if;
-                  
+                  << ContinueTW >>
+                  put("");
                 end loop;
               end loop;
             end loop;
+            << ContinueO >>
+            put("");
           end loop;
         end loop;
       end loop;
@@ -74,14 +105,17 @@ begin
       minVal := cube(1, 1, 1);
       maxVal := cube(1, 1, 1);
     
-      for o in 1..maxSize loop
-        for p in 1..maxSize loop
-          for q in 1..maxSize loop
-          
-            maxVal := Long_Float'Max(cube(o, p, q), maxVal);
-            minVal := Long_Float'Min(cube(o, p, q), minVal);
-            sumVal := sumVal + cube(o, p, q);
-          
+      for i in 1..maxSize loop
+        for j in 1..maxSize loop
+          for k in 1..maxSize loop
+
+            if cube(i, j, k) = -1.0 then goto ContinueTH; end if;
+            maxVal := Long_Float'Max(cube(i, j, k), maxVal);
+            minVal := Long_Float'Min(cube(i, j, k), minVal);
+            sumVal := sumVal + cube(i, j, k);
+            << ContinueTH >>
+            put("");
+
           end loop;
         end loop;
       end loop;
@@ -90,9 +124,7 @@ begin
       
       ratio := minVal / maxVal;
       
-      --new_line;
-      --put_line("Time : " & Long_Float'Image(time) & " Ratio : " & Long_Float'Image(ratio) & " MinVal/MaxVal : " & Long_Float'Image(minVal) & " / " & Long_Float'Image(maxVal));
-      put(Long_Float'Image(time));
+      put("Time : " & Long_Float'Image(time));
       put(" " & Long_Float'Image(cube(1, 1, 1)));
       put(" " & Long_Float'Image(cube(maxSize, 1, 1)));
       put(" " & Long_Float'Image(cube(maxSize, maxSize, 1)));

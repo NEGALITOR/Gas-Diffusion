@@ -1,10 +1,15 @@
 #!/usr2/local/julia-1.8.2/bin/julia
 
-print("Enter Cube Count on One Dimension: ")
+print("Partition On [y/n]? ")
+partI = readline()
 
+partOn = false
+if (partI == "y") partOn = true end
+
+
+print("Enter Cube Count on One Dimension: ")
 maxSize = parse(Int64, readline())
 
-#cube = Array{Float64}(undef, maxSize, maxSize, maxSize)
 cube = zeros(Float64, maxSize, maxSize, maxSize)
 
 diffusion_coefficient = 0.175
@@ -20,24 +25,36 @@ cube[1,1,1] = 1.0E21
 duration = 0.0
 rat = 0.0
 
-#println(cube)
+mid = ceil(Int64, maxSize*0.5)
+partH = floor(Int64, maxSize*0.75)
+
+if (partOn == true)
+  for i in 0:partH
+    for j in 1:maxSize
+        cube[mid, maxSize - i, j] = -1
+    end
+  end
+end
 
 while true
   for i in 1:maxSize
     for j in 1:maxSize
       for k in 1:maxSize
+        
+        if(cube[i, j, k] == -1) continue end
+
         for l in 1:maxSize
           for m in 1:maxSize
             for n in 1:maxSize
-            
-              #println("i : ", i, "| j : ", j, "| k : ", k, "| l : ", l, "| m : ", m, "| n : ", n)
               
+              if(cube[l, m, n] == -1) continue end
+
               if (( ( i == l )   && ( j == m )   && ( k == n+1) ) ||  
-                    ( ( i == l )   && ( j == m )   && ( k == n-1) ) ||  
-                    ( ( i == l )   && ( j == m+1 ) && ( k == n)   ) ||  
-                    ( ( i == l )   && ( j == m-1 ) && ( k == n)   ) ||  
-                    ( ( i == l+1 ) && ( j == m )   && ( k == n)   ) ||  
-                    ( ( i == l-1 ) && ( j == m )   && ( k == n)   ) )
+                  ( ( i == l )   && ( j == m )   && ( k == n-1) ) ||  
+                  ( ( i == l )   && ( j == m+1 ) && ( k == n)   ) ||  
+                  ( ( i == l )   && ( j == m-1 ) && ( k == n)   ) ||  
+                  ( ( i == l+1 ) && ( j == m )   && ( k == n)   ) ||  
+                  ( ( i == l-1 ) && ( j == m )   && ( k == n)   ) )
                     
                 change = (cube[i, j, k] - cube[l, m, n]) * DTerm
                 cube[i, j, k] = cube[i, j, k] - change
@@ -61,6 +78,7 @@ while true
     for j in 1:maxSize
       for k in 1:maxSize
         
+        if(cube[i, j, k] == -1) continue end
         maxVal = max(cube[i, j, k], maxVal)
         minVal = min(cube[i, j, k], minVal)
         sumVal += cube[i, j, k]
