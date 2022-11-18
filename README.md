@@ -18,15 +18,15 @@ The program initializes an array of size that the user defines which splits a 5m
 ## How to Compile and Run
 
 ###### Ada
-gnatmake diffusion.adb
+> gnatmake diffusion.adb
 > ./diffusion
 
 ###### C++
-c++ diffusion.cpp
+> c++ diffusion.cpp
 > ./a.out
 
 ###### Fortran
-gfortran diffusion.f95
+> gfortran diffusion.f95
 > ./a.out
 
 ###### Julia
@@ -34,14 +34,14 @@ chmod u+x diffusion.jl
 > ./diffusion.jl
 
 ###### Lisp
-chmod u+x diffusion.lisp
+> chmod u+x diffusion.lisp
 > ./diffusion.lisp
 
 ###### Python
-python3 diffusion.py
+> python3 diffusion.py
 
 ###### Rust
-(go inside the src folder and execute)
+> (go inside the src folder and execute)
 > cargo build
 > cargo run --release (will not work without --release)
 
