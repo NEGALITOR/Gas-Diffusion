@@ -30,7 +30,7 @@ The program initializes an array of size that the user defines which splits a 5m
 > ./a.out
 
 ###### Julia
-chmod u+x diffusion.jl  
+> chmod u+x diffusion.jl  
 > ./diffusion.jl
 
 ###### Lisp
