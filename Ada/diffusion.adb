@@ -1,7 +1,14 @@
+-- Compiling:
+-- gnatmake diffusion.adb
+-- ./diffusion
+
 with ada.text_io, ada.integer_text_io, ada.float_text_io;
 use ada.text_io, ada.integer_text_io, ada.float_text_io;
 
 procedure diffusion is
+
+  -- Variables
+
   type Three_Dimensional_Float_Array is array (Integer range <>, Integer range <>, Integer range <>) of Long_Float;
   
   partI : Character := ' ';
@@ -30,25 +37,30 @@ procedure diffusion is
   
 begin
   
+  -- Prompts for partition ON or Off
   put("Partition On [y/n]? ");
   get(partI);
   if partI = 'y' then partOn := True; end if;
 
+  -- Prompts for Cube Dimension Size
   put("Enter Cube Count on One Dimension: ");
   get(maxSize);
   
+  -- Initializes constants
   timestep := (room_dimension / speed_of_gas_molecules) / Long_Float(maxSize);
   distance_between_blocks := room_dimension / Long_Float(maxSize);
   
   DTerm := diffusion_coefficient * timestep / (distance_between_blocks*distance_between_blocks);
   
   declare
+    -- Initializes Cube 3D array and Fills cube with 0.0
     cube :  Three_Dimensional_Float_Array ( 1..maxSize, 1..maxSize, 1..maxSize) := (others => (others => (others => 0.0)));
     
   begin
     
     cube(1, 1, 1) := Long_Float(10#1#e+21);
 
+    -- If partition is on, place in -1 where the partition would be at
     mid := Integer(Float'Ceiling(Float(maxSize*0.5)));
     partH := Integer(Float'Floor(Float(maxSize*0.75)));
     if partOn = True then
@@ -61,7 +73,7 @@ begin
       end loop;
     end if;
     
-    
+    -- Checks every adjacent block around the current block and diffuses the mass to it
     loop
       for i in 1..maxSize loop
         for j in 1..maxSize loop
@@ -104,7 +116,8 @@ begin
       sumVal := 0.0;
       minVal := cube(1, 1, 1);
       maxVal := cube(1, 1, 1);
-    
+
+      -- Checks ratio to see if gas equilibrated
       for i in 1..maxSize loop
         for j in 1..maxSize loop
           for k in 1..maxSize loop
@@ -120,10 +133,9 @@ begin
         end loop;
       end loop;
       
-      
-      
       ratio := minVal / maxVal;
       
+      -- Print out data
       put("Time : " & Long_Float'Image(time));
       put(" " & Long_Float'Image(cube(1, 1, 1)));
       put(" " & Long_Float'Image(cube(maxSize, 1, 1)));

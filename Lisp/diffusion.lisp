@@ -1,5 +1,12 @@
 #!/usr/bin/sbcl --script
 
+#|
+# Compiling
+# chmod u+x diffusion.lisp
+# ./diffusion.lisp
+|#
+
+;;;Prompts for partition ON or Off
 (defvar partOn 0)
 (defvar partI)
 (princ "Partition On [y/n]? ")
@@ -7,14 +14,16 @@
 (setf partI (read-char))
 (if (string-equal partI "y") (setf partOn 1))
 
-
+;;;Prompts for Cube Dimension Size
 (defvar maxSize)
 (princ "Enter Cube Count on One Dimension: ")
 (terpri)
 (setf maxSize (read))
 
+;;;Initializes Cube 3D array and fills cube with 0.0
 (defvar cube (make-array (list maxSize maxSize maxSize) :initial-element 0))
 
+;;;Initializes constants
 (defvar diffusion_coefficient 0.175)
 (defvar room_dimension 5)
 (defvar speed_of_gas_molecules 250.0)
@@ -31,6 +40,7 @@
 (defvar mid (- (ceiling (* maxSize 0.5)) 1))
 (defvar partH (+ (floor (* maxSize 0.75)) 1))
 
+;;;If partition is on, place in -1 where the partition would be at
 (if (= partOn 1)
   (progn
     (loop for i from 1 to partH by 1 do
@@ -42,18 +52,13 @@
 
 )
 
-(loop for i from 0 to (- maxSize 1) by 1 do
-  (loop for j from 0 to (- maxSize 1) by 1 do
-    (format t "~d | " (aref cube mid i j))
-  )
-)
-
 (defvar change 0.0)
 
 (defvar sumVal 0.0)
 (defvar maxVal 0.0)
 (defvar minVal 0.0)
 
+;;;Checks every adjacent block around the current block and diffuses the mass to it
 (loop do
   
   (loop for i from 0 to (- maxSize 1) do
@@ -100,6 +105,7 @@
   (setf maxVal (aref cube 0 0 0))
   (setf minVal (aref cube 0 0 0))
   
+  ;;;Checks ratio to see if gas equilibrated
   (loop for i from 0 to (- maxSize 1) do
     (loop for j from 0 to (- maxSize 1) do
       (loop for k from 0 to (- maxSize 1) do
@@ -116,6 +122,7 @@
   
   (setf rat (/ minVal maxVal))
   
+  ;;;Print out data
   (format t "Time: ~d ~d ~d ~d ~d ~d" duration (aref cube 0 0 0) (aref cube (- maxSize 1) 0 0) (aref cube (- maxSize 1) (- maxSize 1) 0) (aref cube (- maxSize 1) (- maxSize 1) (- maxSize 1)) sumVal)
   (terpri)
 

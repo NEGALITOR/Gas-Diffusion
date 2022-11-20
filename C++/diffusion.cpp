@@ -1,3 +1,9 @@
+/*
+Compiling:
+c++ diffusion.cpp
+./a.out
+*/
+
 #include <iostream>
 #include <cmath>
 
@@ -6,18 +12,22 @@ using namespace std;
 int main()
 {
   
+  //Prompts for partition ON or Off
   bool partOn = false;
   cout << "Partition On [y/n]? ";
   char partI;
   cin >> partI;
   if (partI == 'y'){partOn = true;}
   
+  //Prompts for Cube Dimension Size
   int maxSize;
   cout << "Enter Cube Count on One Dimension: ";
   cin >> maxSize;
   
+  //Initializes Cube 3D array
   double cube[maxSize][maxSize][maxSize];
   
+  //Fills cube with 0.0
   for (int i=0; i<maxSize; i++) { 
     for (int j=0; j<maxSize; j++) { 
       for (int k=0; k<maxSize; k++) { 
@@ -25,7 +35,8 @@ int main()
       }
     }
   }
-  
+
+  //Initializes constants
   double diffusion_coefficient = 0.175; 
   double room_dimension = 5;
   double speed_of_gas_molecules = 250.0;
@@ -40,6 +51,7 @@ int main()
   double ratio = 0.0;
   
   
+  //If partition is on, place in -1 where the partition would be at
   int mid = ceil(maxSize*0.5)-1;
   int partH = floor(maxSize*0.75)+1;
   if (partOn == true)
@@ -54,6 +66,7 @@ int main()
   }  
   
 
+  //Checks every adjacent block around the current block and diffuses the mass to it
   do
   {
     for (int i = 0; i < maxSize; i++) {
@@ -95,6 +108,7 @@ int main()
     double minVal = cube[0][0][0];
     double maxVal = cube[0][0][0];
     
+    //Checks ratio to see if gas equilibrated
     for (int i = 0; i < maxSize; i++) {
       for (int j = 0; j < maxSize; j++) {
         for (int k = 0; k < maxSize; k++)
@@ -109,6 +123,8 @@ int main()
     
     ratio = minVal / maxVal;
     
+
+    //Print out data
     cout << "Time : " << time << " " << cube[0][0][0];
     cout << " " << cube[maxSize-1][0][0];
     cout << " " << cube[maxSize-1][maxSize-1][0];

@@ -1,29 +1,38 @@
+! Compiling
+! gfortran diffusion.f95
+! ./a.out
+
 PROGRAM diffusion
   
+  ! Variables
   INTEGER :: maxSize, once, partH, partOn, mid
   CHARACTER :: partI
   REAL (kind=8), dimension(:,:,:), allocatable :: cube
   REAL (kind=8) :: diffusion_coefficient, room_dimension, speed_of_gas_molecules, timestep, distance_between_blocks, DTerm, &
                    time, ratio, change, sumValue, maxValue, minValue
   
-  
+  ! Prompts for partition ON or Off
   partOn = 0
   write(*, '(A)', advance="no") "Partition On [y/n]? "
   read(*,*) partI
   if(partI == 'y') partOn = 1
 
+  ! Prompts for Cube Dimension Size
   write(*, '(A)', advance="no") "Enter Cube Count on One Dimension: "
   read(*,*) maxSize
-  
+
+  !Initializes Cube 3D array
   allocate (cube(maxSize, maxSize, maxSize), stat=ierr)
   
   if (ierr /= 0) then
     print *, "Could not allocate memory - halting run."
     STOP
   END if
-  
+
+  ! Fills cube with 0.0
   cube = 0.0
   
+  ! Initializes constants
   diffusion_coefficient = 0.175
   room_dimension = 5
   speed_of_gas_molecules = 250.0
@@ -36,9 +45,9 @@ PROGRAM diffusion
   time = 0.0
   ratio = 0.0
 
+  ! If partition is on, place in -1 where the partition would be at
   mid = CEILING(maxSize*0.5)
   partH = FLOOR(maxSize*0.75)
-
   if (partOn == 1) then
     do i = 0, partH
       do j = 1, maxSize
@@ -49,6 +58,7 @@ PROGRAM diffusion
     END do
   END if
 
+  ! Checks every adjacent block around the current block and diffuses the mass to it
   do while (0 == 0)
 
     do i = 1, maxSize
@@ -88,6 +98,7 @@ PROGRAM diffusion
     maxValue = cube(1, 1, 1)
     minValue = cube(1, 1, 1)
     
+    ! Checks ratio to see if gas equilibrated
     do i = 1, maxSize
       do j = 1, maxSize
         do k = 1, maxSize
@@ -103,6 +114,7 @@ PROGRAM diffusion
     
     ratio = minValue / maxValue
     
+    ! Print out data
     write(*, '(A, F0.3, A, E10.4)', advance="no") "Time : ", time, " ",  cube(1, 1, 1)
     write(*, '(A, E10.4)', advance="no") " ", cube(maxSize, 1, 1)
     write(*, '(A, E10.4)', advance="no") " ", cube(maxSize, maxSize, 1)

@@ -43,5 +43,5 @@ The program initializes an array of size that the user defines which splits a 5m
 ###### Rust
 > (go inside the src folder and execute)  
 > cargo build  
-> cargo run --release (will not work without --release)
+> cargo run
 

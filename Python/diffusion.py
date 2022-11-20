@@ -1,19 +1,25 @@
+# Compiling:
+# python3 diffusion.py
+
 from numpy import *
 import math
 
 
+# Prompts for partition ON or Off
 print("Partition On [y/n]? ", end = " ")
 partI = str(input())
-
 partOn = False
 if partI == 'y':
     partOn = True
 
+# Prompts for Cube Dimension Size
 print("Enter Cube Count on One Dimension: ", end = " ")
 maxSize = int(input())
 
+# Initializes Cube 3D array and Fills cube with 0.0
 cube = zeros((maxSize,maxSize,maxSize), dtype=float64) 
 
+# Initializes constants
 diffusion_coefficient = 0.175
 room_dimension = 5
 speed_of_gas_molecules = 250.0
@@ -27,13 +33,15 @@ cube[0,0,0] = 1.0e21
 time = 0.0
 ratio = float64(0.0)
 
+# If partition is on, place in -1 where the partition would be at
 mid = int(ceil(maxSize*0.5)-1)
 partH = int(floor(maxSize*0.75)+1)
 if partOn == True:
     for i in range(1, partH+1):
         for j in range(0, maxSize):
             cube[mid, maxSize - i, j] = -1
-            
+
+# Checks every adjacent block around the current block and diffuses the mass to it
 while True:
     for i in range(0, maxSize):
         for j in range(0, maxSize):
@@ -64,6 +72,7 @@ while True:
     maxVal = float64(cube[0, 0, 0])
     minVal = float64(cube[0, 0, 0])
     
+    # Checks ratio to see if gas equilibrated
     for i in range(0, maxSize):
         for j in range(0, maxSize):
             for k in range(0, maxSize):
@@ -74,6 +83,7 @@ while True:
     
     ratio = float64(minVal / maxVal)
     
+    # Print out data
     print("Time : " + str(time) + " " + str(cube[0, 0, 0]), end = "")
     print(" " + str(cube[maxSize-1, 0, 0]), end = "")
     print(" " + str(cube[maxSize-1, maxSize-1, 0]), end = "")
