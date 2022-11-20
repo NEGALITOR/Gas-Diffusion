@@ -99,6 +99,7 @@ fn main() {
         let mut max_val = cube[[0, 0, 0]] as f64;
         let mut min_val = cube[[0, 0, 0]] as f64;
         
+        
         //Checks ratio to see if gas equilibrated
         for i in 0..u_max_size {
             for j in 0..u_max_size {
@@ -107,7 +108,7 @@ fn main() {
                     if cube[[i, j, k]] == -1.0 {continue;}
                     max_val = max_val.max(cube[[i, j, k]]);
                     min_val = min_val.min(cube[[i, j, k]]);
-                    _sum_val = cube[[i, j, k]];
+                    _sum_val += cube[[i, j, k]];
                 }
             }
         }
